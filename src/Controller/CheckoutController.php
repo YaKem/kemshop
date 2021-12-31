@@ -13,10 +13,12 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class CheckoutController extends AbstractController
 {
     private $cartService;
+    private $session;
 
-    public function __construct(CartService $cartService)
+    public function __construct(CartService $cartService, RequestStack $requestStack)
     {
         $this->cartService = $cartService;
+        $this->session = $requestStack->getSession();
     }
 
     /**
@@ -34,6 +36,10 @@ class CheckoutController extends AbstractController
         if(!$user->getAddresses()->getValues()) {
             $this->addFlash('notice', 'Please add an address to your account to continue your order');
             return $this->redirectToRoute('address_new');
+        }
+
+        if($this->session->get('checkout_data')) {
+            return $this->redirectToRoute('checkout_confirm');
         }
 
         $form = $this->createForm(CheckoutType::class, null, ['user' => $user]);
@@ -64,9 +70,14 @@ class CheckoutController extends AbstractController
         $form = $this->createForm(CheckoutType::class, null, ['user' => $user]);
         $form->handleRequest($request);
         
-        if($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-
+        if($form->isSubmitted() && $form->isValid() || $this->session->get('checkout_data')) {
+            
+            if($this->session->get('checkout_data')) {
+                $data = $this->session->get('checkout_data');
+            } else {
+                $data = $form->getData();
+                $this->session->set('checkout_data', $data);
+            }
             return $this->render('checkout/confirm.html.twig', [
                 'cart' => $cart,
                 'form' => $form->createView(),
@@ -75,6 +86,16 @@ class CheckoutController extends AbstractController
                 'informations' => $data['informations']
             ]);
         }
+
+        return $this->redirectToRoute('checkout');
+    }
+
+    /**
+     * @Route("/checkout/edit", name="checkout_edit")
+     */
+    public function checkoutEdit()
+    {
+        $this->session->set('checkout_data', []);
 
         return $this->redirectToRoute('checkout');
     }

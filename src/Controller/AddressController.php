@@ -9,6 +9,7 @@ use App\Services\CartService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -17,6 +18,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class AddressController extends AbstractController
 {
+    private $session;
+
+    public function __construct(RequestStack $requestStack)
+    {
+        $this->session = $requestStack->getSession();
+    }
+
     /**
      * @Route("/", name="address_index", methods={"GET"})
      */
@@ -68,7 +76,12 @@ class AddressController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            if($cart->getFull()) {
+            if($this->session->get('checkout_data')) {
+                $data = $this->session->get('checkout_data');
+                $data['address'] = $address;
+
+                $this->session->set('checkout_data', $data);
+
                 return $this->redirectToRoute('checkout_confirm');
             }
 

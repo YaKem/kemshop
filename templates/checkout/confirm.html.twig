@@ -19,7 +19,7 @@
                                 <a href="{{ path('address_edit', {'id': address.id}) }}" class="btn btn-sm btn-fill-out mt-1">Edit address</a>
                             </div>
                             <div class="col-md">
-                                <a href="{{ path('checkout') }}" class="btn btn-sm btn-fill-out mt-1">Change address</a>
+                                <a href="{{ path('checkout_edit') }}" class="btn btn-sm btn-fill-out mt-1">Change address</a>
                             </div>
                         </div>
                     </div>
@@ -28,7 +28,7 @@
                         <div class="content" id="carrier">
                             {{ carrier|replace({'[br]': '<br/>'})|raw }}
                         </div>
-                        <a href="{{ path('checkout') }}" class="btn btn-sm btn-fill-out mt-1">Change carrier</a>
+                        <a href="{{ path('checkout_edit') }}" class="btn btn-sm btn-fill-out mt-1">Change carrier</a>
                     </div>
                     {% if informations %}
                         <div class="heading_s1">
