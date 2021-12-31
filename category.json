@@ -1,0 +1,14 @@
+[
+{"type":"header","version":"5.0.2","comment":"Export to JSON plugin for PHPMyAdmin"},
+{"type":"database","name":"kemshop_db"},
+{"type":"table","name":"category","database":"kemshop_db","data":
+[
+{"id":"3","name":"Bonnet","description":null,"image":null},
+{"id":"4","name":"Montre","description":null,"image":null},
+{"id":"5","name":"Bijou","description":null,"image":null},
+{"id":"6","name":"Portable","description":null,"image":null},
+{"id":"7","name":"Drone","description":null,"image":null},
+{"id":"8","name":"Gadget","description":null,"image":null}
+]
+}
+]
