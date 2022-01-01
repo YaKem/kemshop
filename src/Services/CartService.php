@@ -102,9 +102,10 @@ class CartService
             }
 
             $cartComplete['data'] = [
-                'count' => $cartQuantity,
-                'subtotal' => round($cartSubtotal / 100, 2),
-                'taxe' => round($cartSubtotal * self::TVA / 100, 2)
+                'quantity_cart' => $cartQuantity,
+                'subTotalHT' => round($cartSubtotal / 100, 2),
+                'taxe' => round($cartSubtotal * self::TVA / 100, 2),
+                'subTotalTTC' => round(($cartSubtotal * (1 + self::TVA)) / 100, 2)
             ];
         }
 

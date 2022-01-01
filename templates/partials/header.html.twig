@@ -91,7 +91,7 @@
                             </form>
                         </div><div class="search_overlay"></div>
                     </li>
-                    <li class="dropdown cart_dropdown"><a class="nav-link cart_trigger" href="#" data-toggle="dropdown"><i class="linearicons-cart"></i><span class="cart_count">{% if app.session.get('cartFull') %}{{ app.session.get('cartFull').data.count }}{% else %}0{% endif %}</span></a>
+                    <li class="dropdown cart_dropdown"><a class="nav-link cart_trigger" href="#" data-toggle="dropdown"><i class="linearicons-cart"></i><span class="cart_count">{% if app.session.get('cartFull') %}{{ app.session.get('cartFull').data.quantity_cart }}{% else %}0{% endif %}</span></a>
                         <div class="cart_box dropdown-menu dropdown-menu-right">
                             {% if app.session.get('cartFull') %}
                                 <ul class="cart_list">
@@ -104,7 +104,7 @@
                                     {% endfor %}                               
                                 </ul>
                                 <div class="cart_footer">
-                                    <p class="cart_total"><strong>Subtotal (HT):</strong> <span class="cart_price"> </span>{{ app.session.get('cartFull').data.subtotal }}<span class="price_symbole">€</span></p>
+                                    <p class="cart_total"><strong>Subtotal (HT):</strong> <span class="cart_price"> </span>{{ app.session.get('cartFull').data.subTotalHT }}<span class="price_symbole">€</span></p>
                                     <p class="cart_buttons"><a href="{{ path('cart') }}" class="btn btn-fill-line rounded-0 view-cart">View Cart</a><a href="{{ path('checkout') }}" class="btn btn-fill-out rounded-0 checkout">Checkout</a></p>
                                 </div>
                             {% else %}

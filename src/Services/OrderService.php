@@ -3,7 +3,9 @@
 namespace App\Services;
 
 use App\Entity\Cart;
+use App\Entity\Order;
 use App\Entity\CartDetails;
+use App\Entity\OrderDetails;
 use Doctrine\ORM\EntityManagerInterface;
 
 class OrderService
@@ -17,7 +19,44 @@ class OrderService
 
     public function createOrder($cart)
     {
+        $order = new Order();
 
+        $order->setReference($cart->getReference())
+                ->setCarrierName($cart->getCarrierName())
+                ->setCarrierPrice($cart->getCarrierPrice())
+                ->setFullName($cart->getFullName())
+                ->setDelivery($cart->getDelivery())
+                ->setMoreInformations($cart->getMoreInformations())
+                ->setQuantity($cart->getQuantity())
+                ->setsubTotalHT($cart->getSubTotalHT())
+                ->setTaxe($cart->getTaxe())
+                ->setsubTotalTTC($cart->getSubTotalTTC())
+                ->setUser($cart->getUser())
+                ->setCreatedAt($cart->getCreatedAt())
+        ;
+
+        $this->entityManager->persist($order);
+
+        $products = $cart->getCartDetails()->getValues();
+
+        foreach($products as $cart_product) {
+            $orderDetails = new OrderDetails();
+
+            $orderDetails->setOrders($cart)
+                        ->setProductName($cart_product->getProductName())
+                        ->setProductPrice(round($cart_product->getProductPrice(), 2))
+                        ->setQuantity($cart_product->getQuantity())
+                        ->setSubTotalHT(round($cart_product->getSubtotalHT(), 2))
+                        ->setSubtTotalTTC(round($cart_product->getSubtotalTTC(), 2))
+                        ->setTaxe(round($cart_product->getTaxe(), 2))
+            ;
+
+            $this->entityManager->persist($orderDetails);
+        }
+
+        $this->entityManager->flush();
+
+        return $order;
     }
 
     public function saveCart($data, $user)
@@ -25,7 +64,7 @@ class OrderService
         /*
         [
             'products' => [],
-            'data' => [],
+            'data' => ['count' => '', 'subtotal' => '', 'taxe' => ''],
             'checkout' => [
                 'address' => 'address',
                 'carrier' => 'carrier'
@@ -41,21 +80,23 @@ class OrderService
 
         $cart->setReference($reference)
                 ->setCarrierName($carrier->getName())
-                ->setCarrierPrice($carrier->getPrice())
+                ->setCarrierPrice(round($carrier->getPrice() / 100, 2))
                 ->setFullName($address->getFullName())
                 ->setDelivery($address)
                 ->setMoreInformations($informations)
                 ->setQuantity($data['data']['quantity_cart'])
-                ->setsubTotalHT($data['data']['subTotalHT'])
+                ->setSubTotalHT($data['data']['subTotalHT'])
                 ->setTaxe($data['data']['taxe'])
-                ->setsubTotalTTC((($data['data']['subTotalTTC'] + $carrier->getPrice()) / 100)|number_format(2, ',', '.'))
+                ->setSubTotalTTC(round(($data['data']['subTotalTTC'] + $carrier->getPrice()) / 100, 2))
                 ->setUser($user)
                 ->setCreatedAt(new \DateTime())
         ;
 
-        $entityManager->persist($cart);
+        $this->entityManager->persist($cart);
 
         $cart_details_array = [];
+
+        $subtotal = $data['data']['subTotalHT'];
 
         foreach($data['products'] as $products) {
             $cartDetails = new CartDetails();
