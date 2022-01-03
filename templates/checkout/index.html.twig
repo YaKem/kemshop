@@ -55,7 +55,7 @@
                                     <tfoot>
                                         <tr>
                                             <th>SubTotal HT</th>
-                                            <td class="product-subtotal">{{ cart.data.subtotal }}€</td>
+                                            <td class="product-subtotal">{{ cart.data.subTotalHT }}€</td>
                                         </tr>
                                         <tr>
                                             <th>Taxe</th>
@@ -63,7 +63,7 @@
                                         </tr>
                                         <tr>
                                             <th>Total</th>
-                                            <td class="product-subtotal">{{ cart.data.subtotal + cart.data.taxe }}€</td>
+                                            <td class="product-subtotal">{{ cart.data.subTotalTTC + cart.data.taxe }}€</td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -81,5 +81,4 @@
             {{ form_end(form) }}
         </div>
     </div>
-
 {% endblock %}

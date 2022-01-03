@@ -6,15 +6,18 @@ use App\Entity\Cart;
 use App\Entity\Order;
 use App\Entity\CartDetails;
 use App\Entity\OrderDetails;
+use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class OrderService
 {
-    protected $entityManager;
+    private $entityManager;
+    private $repoProduct;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, ProductRepository $repo)
     {
         $this->entityManager = $entityManager;
+        $this->repoProduct = $repo;
     }
 
     public function createOrder($cart)
@@ -124,5 +127,54 @@ class OrderService
         $date = new \DateTime();
         return $date->format('dmY') . uniqid();
     }
+    
+    public function getLineItems($cart)
+    {
+        $cartDetails = $cart->getCartDetails();
 
+        // Products
+        $line_items = [];
+        foreach($cartDetails as $product_item) {
+            $product = $this->repoProduct->findOneByName($product_item->getProductName());
+
+            $line_items[] = [
+                'price_data' => [
+                    'currency' => 'eur',
+                    'unit_amount' => $product->getPrice(),
+                    'product_data' => [
+                        'name' => $product->getName(),
+                        'images' => [$_ENV['YOUR_DOMAIN'] . '/uploads/products/' . $product->getImage()]
+                    ]
+                ],
+                'quantity' => $product_item->getQuantity()
+            ];
+        }
+      
+        // Carrier
+        $line_items[] = [
+            'price_data' => [
+                'currency' => 'eur',
+                'unit_amount' => $cart->getCarrierPrice() * 100,
+                'product_data' => [
+                    'name' => $cart->getCarrierName(),
+                    'images' => [$_ENV['YOUR_DOMAIN'] . '/uploads/products/']
+                    ]
+                ],
+                'quantity' => 1
+        ];
+        
+        // Taxe
+        $line_items[] = [
+            'price_data' => [
+                'currency' => 'eur',
+                'unit_amount' => $cart->getTaxe() * 100,
+                'product_data' => [
+                    'name' => 'TVA (20%)',
+                    'images' => [$_ENV['YOUR_DOMAIN'] . '/uploads/products/']
+                ]
+            ],
+            'quantity' => 1
+        ];
+        return $line_items;
+    }
 }

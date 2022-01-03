@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Cart;
 
 use App\Services\CartService;
 use Symfony\Component\HttpFoundation\Response;
@@ -9,11 +9,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class CartController extends AbstractController
 {
-    private $cart;
+    private $cartService;
 
-    public function __construct(CartService $cart)
+    public function __construct(CartService $cartService)
     {
-        $this->cart = $cart;
+        $this->cartService = $cartService;
     }
 
     /**
@@ -21,7 +21,7 @@ class CartController extends AbstractController
      */
     public function index(): Response
     {
-        $cart = $this->cart->getFull();
+        $cart = $this->cartService->getFull();
 
         if(!isset($cart['products'])) {
             return $this->redirectToRoute('home');
@@ -37,7 +37,7 @@ class CartController extends AbstractController
      */
     public function addToCart($id): Response
     {
-        $this->cart->add($id);
+        $this->cartService->add($id);
 
         return $this->redirectToRoute('cart');
     }
@@ -47,7 +47,7 @@ class CartController extends AbstractController
      */
     public function decreaseFromCart($id): Response
     {
-        $this->cart->decrease($id);
+        $this->cartService->decrease($id);
 
         return $this->redirectToRoute('cart');
     }
@@ -57,7 +57,7 @@ class CartController extends AbstractController
      */
     public function deleteFromCart($id): Response
     {
-        $this->cart->delete($id);
+        $this->cartService->delete($id);
 
         return $this->redirectToRoute('cart');
     }

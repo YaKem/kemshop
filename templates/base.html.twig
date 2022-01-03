@@ -20,6 +20,8 @@
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
+
+        {% block jsStripe %}{% endblock %}
     </head>
     <body>
 
@@ -41,5 +43,6 @@
         <script src="{{ asset('assets/js/slick.min.js') }}"></script>
         <script src="{{ asset('assets/js/jquery.elevatezoom.js') }}"></script>
         <script src="{{ asset('assets/js/scripts.js') }}"></script>
+        {% block jsCheckout %}{% endblock %}
     </body>
 </html>

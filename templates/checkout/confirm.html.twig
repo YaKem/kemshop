@@ -2,6 +2,10 @@
 
 {% block title %}Checkout KemShop{% endblock %}
 
+{% block jsStripe %}
+    <script src="https://js.stripe.com/v3/"></script>
+{% endblock %}
+
 {% block body %}
     {{ include('partials/title_section.html.twig', {'name': 'Checkout'}) }}
 
@@ -63,7 +67,7 @@
                                 <tfoot>
                                     <tr>
                                         <th>SubTotal (HT)</th>
-                                        <td class="product-subtotal">{{ cart.data.subtotal }}€</td>
+                                        <td class="product-subtotal">{{ cart.data.subTotalHT }}€</td>
                                     </tr>
                                     <tr>
                                         <th>Taxe</th>
@@ -75,7 +79,7 @@
                                     </tr>
                                     <tr>
                                         <th>Total (TTC)</th>
-                                        <td class="product-subtotal">{{ (cart.data.subtotal + cart.data.taxe + (carrier.price / 100))|number_format(2, ',', '.') }}€</td>
+                                        <td class="product-subtotal">{{ (cart.data.subTotalTTC + cart.data.taxe + (carrier.price / 100))|number_format(2, ',', '.') }}€</td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -84,12 +88,38 @@
                             <div class="heading_s1">
                                 <h4>Payment</h4>
                             </div>
-                            <button type="submit" id="checkout-button" class="btn btn-fill-out btn-block">Pay | {{ cart.data.subtotal + cart.data.taxe + carrier.price }}€</button>
+                            <button type="submit" id="checkout-button" class="btn btn-fill-out btn-block">Pay | {{ cart.data.subTotalTTC + cart.data.taxe + carrier.price }}€</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    {% block jsCheckout %}
+        <script type="text/javascript">
+            var stripe = Stripe('pk_test_51KDQWGKDe6DxA131bBYnaQnw6LwdF0YeqaW2fyqe7ZgNrcTaBM8lSjTIJIDkAvko1hiPiCWw26fxs5o1mXxXGlVW007ra2x3gD');
+            var checkoutButton = document.getElementById('checkout-button');
 
+            checkoutButton.addEventListener('click', function() {
+                // Call your backend to create the Checkout Session
+                fetch('/create-checkout-session/{{ reference }}', {
+                    method: 'POST',
+                })
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(session) {
+                    return stripe.redirectToCheckout({ sessionId: session.id });
+                })
+                .then(function(result) {
+                    // If `redirectToCheckout` fails due to a browser or network
+                    // error, you should display the localized error message to your
+                    // customer using `error.message`.
+                    if (result.error) {
+                        alert(result.error.message);
+                    }
+                });
+            });
+        </script>
+    {% endblock %}
 {% endblock %}
