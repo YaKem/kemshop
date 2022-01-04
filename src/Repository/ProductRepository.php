@@ -19,6 +19,35 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
+    /**
+     * @return Product[] Returns an array of Product objects
+     */
+    public function findWithSearch($search)
+    {
+        $query = $this->createQueryBuilder('p');
+
+        if($search->getMinPrice()) {
+            $query = $query->andWhere('p.price > ' . $search->getMinPrice() * 100);
+        }
+
+        if($search->getMaxPrice()) {
+            $query = $query->andWhere('p.price < ' . $search->getMaxPrice() * 100);
+        }
+
+        if($search->getTags()) {
+            $query = $query->andWhere('p.tags like :val')
+                            ->setParameter('val', "%{$search->getTags()}%");
+        }
+
+        if($search->getCategories()) {
+            $query = $query->join('p.category', 'c')
+                            ->andWhere('c.id IN (:categories)')
+                            ->setParameter('categories', $search->getCategories());
+        }
+        
+        return $query->getQuery()->getResult();
+    }
+
     // /**
     //  * @return Product[] Returns an array of Product objects
     //  */
@@ -47,4 +76,5 @@ class ProductRepository extends ServiceEntityRepository
         ;
     }
     */
+
 }

@@ -11,6 +11,9 @@
             <div class="row">
                 <div class="col-lg-9">
                     <div class="row shop_container">
+                        {% if not products %}
+                            <div class="m-5">Sorry. No product matches your search results!</div>
+                        {% endif %}
                         {% for product in products %}
                             {{ include('partials/product.html.twig', {'product': product}) }}
                         {% endfor %}

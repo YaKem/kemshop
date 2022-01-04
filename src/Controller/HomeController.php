@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Search;
 use App\Entity\Product;
 use App\Form\SearchType;
 use Symfony\Component\Dotenv\Dotenv;
@@ -48,17 +49,17 @@ class HomeController extends AbstractController
      */
     public function shop(ProductRepository $repoProduct, Request $request): Response
     {
-        $form = $this->createForm(SearchType::class, null);
+        $products = $repoProduct->findAll();            
         $search = new Search();
+        $form = $this->createForm(SearchType::class, $search);
         $form->handleRequest($request);
-
+        
         if($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-
+            $products = $repoProduct->findWithSearch($search);
         }
-
+        
         return $this->render('home/shop.html.twig', [
-            'products' => $repoProduct->findAll(),
+            'products' => $products,
             'form' => $form->createView()
         ]);
     }
