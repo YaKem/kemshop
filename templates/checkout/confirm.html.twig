@@ -79,7 +79,7 @@
                                     </tr>
                                     <tr>
                                         <th>Total (TTC)</th>
-                                        <td class="product-subtotal">{{ (cart.data.subTotalTTC + cart.data.taxe + (carrier.price / 100))|number_format(2, ',', '.') }}€</td>
+                                        <td class="product-subtotal">{{ (cart.data.subTotalTTC + (carrier.price / 100))|number_format(2, ',', '.') }}€</td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -88,13 +88,14 @@
                             <div class="heading_s1">
                                 <h4>Payment</h4>
                             </div>
-                            <button type="submit" id="checkout-button" class="btn btn-fill-out btn-block">Pay | {{ cart.data.subTotalTTC + cart.data.taxe + carrier.price }}€</button>
+                            <button type="submit" id="checkout-button" class="btn btn-fill-out btn-block">Pay | {{ cart.data.subTotalTTC + (carrier.price / 100) }}€</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     {% block jsCheckout %}
         <script type="text/javascript">
             var stripe = Stripe('pk_test_51KDQWGKDe6DxA131bBYnaQnw6LwdF0YeqaW2fyqe7ZgNrcTaBM8lSjTIJIDkAvko1hiPiCWw26fxs5o1mXxXGlVW007ra2x3gD');

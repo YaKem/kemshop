@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Product Detail{% endblock %}
+
+{% block body %}
+    {{ include('partials/header.html.twig', {'name': 'Shop' }) }}    
+    {{ include('partials/title_section.html.twig', {'name': 'Shop' }) }}
+
+    <div class="section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-9">
+                    <div class="row shop_container">
+                        {% for product in products %}
+                            {{ include('partials/product.html.twig', {'product': product}) }}
+                        {% endfor %}
+                    </div>
+                </div>
+            <div class="col-lg-3 order-lg-first mt-4 pt-2 mt-lg-0 pt-lg-0">
+                    <div class="sidebar">
+                        {{ form_start(form) }}
+                            <div class="widget">
+                                <h5 class="widget_title">Categories</h5>
+                                {{ form_row(form.categories) }}
+                            </div>
+                            <div class="widget">
+                                <h5 class="widget_title">Price</h5>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        {{ form_row(form.minprice) }}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {{ form_row(form.maxprice) }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="widget">
+                                <h5 class="widget_title">Tags</h5>
+                                {{ form_row(form.tags) }}
+                            </div>
+                            <button class="btn btn-border-fill btn-block"> Search</button>
+                        {{ form_end(form) }}
+                    </div>                   
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.js-categories-multiple').select2();
+        })
+    </script>
+{% endblock %}

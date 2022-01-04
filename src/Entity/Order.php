@@ -48,7 +48,7 @@ class Order
     /**
      * @ORM\Column(type="boolean")
      */
-    private $isPaid;
+    private $isPaid = false;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -61,7 +61,7 @@ class Order
     private $createdAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=OrderDetails::class, mappedBy="orders")
+     * @ORM\OneToMany(targetEntity=OrderDetails::class, mappedBy="orders", cascade={"remove"})
      */
     private $orderDetails;
 
@@ -90,6 +90,11 @@ class Order
      * @ORM\Column(type="float")
      */
     private $subTotalTTC;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $StripeCheckoutSessionId;
 
     public function __construct()
     {
@@ -139,7 +144,7 @@ class Order
 
     public function getCarrierPrice(): ?float
     {
-        return $this->carrierPrice;
+        return $this->carrierPrice * 100;
     }
 
     public function setCarrierPrice(float $carrierPrice): self
@@ -251,12 +256,12 @@ class Order
         return $this;
     }
 
-    public function getsubTotalHT(): ?float
+    public function getSubTotalHT(): ?float
     {
-        return $this->subTotalHT;
+        return $this->subTotalHT * 100;
     }
 
-    public function setsubTotalHT(float $subTotalHT): self
+    public function setSubTotalHT(float $subTotalHT): self
     {
         $this->subTotalHT = $subTotalHT;
 
@@ -265,7 +270,7 @@ class Order
 
     public function getTaxe(): ?float
     {
-        return $this->taxe;
+        return $this->taxe * 100;
     }
 
     public function setTaxe(float $taxe): self
@@ -275,14 +280,26 @@ class Order
         return $this;
     }
 
-    public function getsubTotalTTC(): ?float
+    public function getSubTotalTTC(): ?float
     {
-        return $this->subTotalTTC;
+        return $this->subTotalTTC * 100;
     }
 
-    public function setsubTotalTTC(float $subTotalTTC): self
+    public function setSubTotalTTC(float $subTotalTTC): self
     {
         $this->subTotalTTC = $subTotalTTC;
+
+        return $this;
+    }
+
+    public function getStripeCheckoutSessionId(): ?string
+    {
+        return $this->StripeCheckoutSessionId;
+    }
+
+    public function setStripeCheckoutSessionId(?string $StripeCheckoutSessionId): self
+    {
+        $this->StripeCheckoutSessionId = $StripeCheckoutSessionId;
 
         return $this;
     }

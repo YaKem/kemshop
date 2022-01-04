@@ -1,9 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}KemShop Shopping!{% endblock %}
 
 {% block body %}
     {{ include('partials/header.html.twig', {'name': 'Home Page' }) }}
+    
+    {% if slider %}
+        {{ include('partials/slider.html.twig', {'slider': slider }) }}
+    {% else %}
+        {{ include('partials/title_section.html.twig', {'name': 'Home Page' }) }}
+    {% endif %}
+
     <div class="container">
         <div class="section small_pt pb_70">
             <div class="container">

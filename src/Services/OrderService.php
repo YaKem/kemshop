@@ -26,14 +26,14 @@ class OrderService
 
         $order->setReference($cart->getReference())
                 ->setCarrierName($cart->getCarrierName())
-                ->setCarrierPrice($cart->getCarrierPrice())
+                ->setCarrierPrice($cart->getCarrierPrice() / 100)
                 ->setFullName($cart->getFullName())
                 ->setDelivery($cart->getDelivery())
                 ->setMoreInformations($cart->getMoreInformations())
                 ->setQuantity($cart->getQuantity())
-                ->setsubTotalHT($cart->getSubTotalHT())
-                ->setTaxe($cart->getTaxe())
-                ->setsubTotalTTC($cart->getSubTotalTTC())
+                ->setsubTotalHT($cart->getSubTotalHT() / 100)
+                ->setTaxe($cart->getTaxe() / 100)
+                ->setsubTotalTTC($cart->getSubTotalTTC() / 100)
                 ->setUser($cart->getUser())
                 ->setCreatedAt($cart->getCreatedAt())
         ;
@@ -45,12 +45,12 @@ class OrderService
         foreach($products as $cart_product) {
             $orderDetails = new OrderDetails();
 
-            $orderDetails->setOrders($cart)
+            $orderDetails->setOrders($order)
                         ->setProductName($cart_product->getProductName())
-                        ->setProductPrice(round($cart_product->getProductPrice(), 2))
+                        ->setProductPrice(round($cart_product->getProductPrice() / 100, 2))
                         ->setQuantity($cart_product->getQuantity())
                         ->setSubTotalHT(round($cart_product->getSubtotalHT(), 2))
-                        ->setSubtTotalTTC(round($cart_product->getSubtotalTTC(), 2))
+                        ->setSubTotalTTC(round($cart_product->getSubtotalTTC(), 2))
                         ->setTaxe(round($cart_product->getTaxe(), 2))
             ;
 
@@ -90,26 +90,26 @@ class OrderService
                 ->setQuantity($data['data']['quantity_cart'])
                 ->setSubTotalHT($data['data']['subTotalHT'])
                 ->setTaxe($data['data']['taxe'])
-                ->setSubTotalTTC(round(($data['data']['subTotalTTC'] + $carrier->getPrice()) / 100, 2))
+                ->setSubTotalTTC(round($data['data']['subTotalTTC'] + ($carrier->getPrice() / 100), 2))
                 ->setUser($user)
                 ->setCreatedAt(new \DateTime())
         ;
-
+// dd($cart);
         $this->entityManager->persist($cart);
 
         $cart_details_array = [];
 
-        $subtotal = $data['data']['subTotalHT'];
-
+        // $subtotal = $data['data']['subTotalHT'];
+        
         foreach($data['products'] as $products) {
             $cartDetails = new CartDetails();
-
+            $subtotal = $products['quantity'] * $products['product']->getPrice() / 100;
             $cartDetails->setCarts($cart)
                         ->setProductName($products['product']->getName())
                         ->setProductPrice($products['product']->getPrice())
                         ->setQuantity($products['quantity'])
                         ->setSubTotalHT($subtotal)
-                        ->setSubtTotalTTC($subtotal * 1.2)
+                        ->setSubTotalTTC($subtotal * 1.2)
                         ->setTaxe($subtotal * 0.2)
             ;
 
@@ -154,7 +154,7 @@ class OrderService
         $line_items[] = [
             'price_data' => [
                 'currency' => 'eur',
-                'unit_amount' => $cart->getCarrierPrice() * 100,
+                'unit_amount' => $cart->getCarrierPrice(),
                 'product_data' => [
                     'name' => $cart->getCarrierName(),
                     'images' => [$_ENV['YOUR_DOMAIN'] . '/uploads/products/']
@@ -167,7 +167,7 @@ class OrderService
         $line_items[] = [
             'price_data' => [
                 'currency' => 'eur',
-                'unit_amount' => $cart->getTaxe() * 100,
+                'unit_amount' => $cart->getTaxe(),
                 'product_data' => [
                     'name' => 'TVA (20%)',
                     'images' => [$_ENV['YOUR_DOMAIN'] . '/uploads/products/']

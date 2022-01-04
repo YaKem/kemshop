@@ -139,7 +139,7 @@ class Cart
 
     public function getCarrierPrice(): ?float
     {
-        return $this->carrierPrice;
+        return $this->carrierPrice * 100;
     }
 
     public function setCarrierPrice(float $carrierPrice): self
@@ -251,12 +251,12 @@ class Cart
         return $this;
     }
 
-    public function getsubTotalHT(): ?float
+    public function getSubTotalHT(): ?float
     {
-        return $this->subTotalHT;
+        return $this->subTotalHT * 100;
     }
 
-    public function setsubTotalHT(float $subTotalHT): self
+    public function setSubTotalHT(float $subTotalHT): self
     {
         $this->subTotalHT = $subTotalHT;
 
@@ -265,7 +265,7 @@ class Cart
 
     public function getTaxe(): ?float
     {
-        return $this->taxe;
+        return $this->taxe * 100;
     }
 
     public function setTaxe(float $taxe): self
@@ -275,12 +275,12 @@ class Cart
         return $this;
     }
 
-    public function getsubTotalTTC(): ?float
+    public function getSubTotalTTC(): ?float
     {
-        return $this->subTotalTTC;
+        return $this->subTotalTTC * 100;
     }
 
-    public function setsubTotalTTC(float $subTotalTTC): self
+    public function setSubTotalTTC(float $subTotalTTC): self
     {
         $this->subTotalTTC = $subTotalTTC;
 

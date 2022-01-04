@@ -73,7 +73,7 @@ class CartService
     // Delete the entire cart
     public function remove()
     {
-        return $this->session->remove('cart');       
+        return $this->update([]);     
     }
 
     // Get the full cart with products
@@ -86,14 +86,14 @@ class CartService
         if(!empty($this->get())) {
             foreach($this->get() as $id => $quantity) {
                 $product_object = $this->entityManager->getRepository(Product::class)->findOneById($id);
-    
+
                 if(!$product_object) {
                     $this->delete($id);
                     continue;
                 }
   
                 $cartQuantity += $quantity;
-                $cartSubtotal += $quantity * $product_object->getPrice();
+                $cartSubtotal += $quantity * $product_object->getPrice() / 100;
 
                 $cartComplete['products'][] = [
                     'product' => $product_object,
@@ -103,9 +103,9 @@ class CartService
 
             $cartComplete['data'] = [
                 'quantity_cart' => $cartQuantity,
-                'subTotalHT' => round($cartSubtotal / 100, 2),
-                'taxe' => round($cartSubtotal * self::TVA / 100, 2),
-                'subTotalTTC' => round(($cartSubtotal * (1 + self::TVA)) / 100, 2)
+                'subTotalHT' => round($cartSubtotal, 2),
+                'taxe' => round($cartSubtotal * self::TVA, 2),
+                'subTotalTTC' => round($cartSubtotal * (1 + self::TVA), 2)
             ];
         }
 

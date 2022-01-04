@@ -7,9 +7,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="Exclusively for all! Take advantage of up to -50% on these offers during our smart days. Shop smart with discounts on electronics, phones and home goods. Up to -50% Buyer Protection. Free Shipping. Summer promo. Great Value. A multitude of sellers.">
         <meta name="keywords" content="">
-        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/shopping-bag.png') }}">
+        <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/images/favicon.png') }}">
 
-        <title>{% block title %}KeShop - Shopping{% endblock %}</title>
+        <title>{% block title %}KemShop - Shopping{% endblock %}</title>
 
         <link rel="stylesheet" href="{{ asset('assets/style.css') }}">
 
@@ -17,11 +17,14 @@
             {{ encore_entry_link_tags('app') }}
         {% endblock %}
 
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
 
         {% block jsStripe %}{% endblock %}
+
     </head>
     <body>
 
@@ -43,6 +46,7 @@
         <script src="{{ asset('assets/js/slick.min.js') }}"></script>
         <script src="{{ asset('assets/js/jquery.elevatezoom.js') }}"></script>
         <script src="{{ asset('assets/js/scripts.js') }}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         {% block jsCheckout %}{% endblock %}
     </body>
 </html>

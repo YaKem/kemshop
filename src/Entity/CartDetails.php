@@ -45,7 +45,7 @@ class CartDetails
     /**
      * @ORM\Column(type="float")
      */
-    private $subtTotalTTC;
+    private $subTotalTTC;
 
     /**
      * @ORM\ManyToOne(targetEntity=Cart::class, inversedBy="cartDetails")
@@ -94,12 +94,12 @@ class CartDetails
         return $this;
     }
 
-    public function getsubTotalHT(): ?float
+    public function getSubTotalHT(): ?float
     {
         return $this->subTotalHT;
     }
 
-    public function setsubTotalHT(float $subTotalHT): self
+    public function setSubTotalHT(float $subTotalHT): self
     {
         $this->subTotalHT = $subTotalHT;
 
@@ -118,14 +118,14 @@ class CartDetails
         return $this;
     }
 
-    public function getSubtTotalTTC(): ?float
+    public function getSubTotalTTC(): ?float
     {
-        return $this->subtTotalTTC;
+        return $this->subTotalTTC;
     }
 
-    public function setSubtTotalTTC(float $subtTotalTTC): self
+    public function setSubTotalTTC(float $subTotalTTC): self
     {
-        $this->subtTotalTTC = $subtTotalTTC;
+        $this->subTotalTTC = $subTotalTTC;
 
         return $this;
     }

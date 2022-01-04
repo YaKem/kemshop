@@ -43,9 +43,11 @@
                                 <div class="card-header">
                                     <h3>HELLO {{ app.user.firstname|upper }} {{ app.user.lastname|upper }}</h3>
                                 </div>
-                                <div class="card-body">
-
+                                <div class="card-body">                                  
                                     <p>From your account dashboard. you can easily check &amp; view your <a href="javascript:void(0);" onclick="$('#orders-tab').trigger('click')">recent orders</a>, manage your <a href="javascript:void(0);" onclick="$('#address-tab').trigger('click')">shipping and billing addresses</a> and <a href="javascript:void(0);" onclick="$('#account-detail-tab').trigger('click')">edit your password and account details.</a></p>
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <a href="{{ path('admin') }}" class="btn btn-fill-out" target="_blank">Access to the backoffice</a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -54,37 +56,36 @@
                                 <div class="card-header">
                                     <h3>Orders</h3>
                                 </div>
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Order</th>
-                                                    <th>Date</th>
-                                                    <th>Status</th>
-                                                    <th>Total</th>
-                                                    <th>Actions</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>#1234</td>
-                                                    <td>March 15, 2020</td>
-                                                    <td>Processing</td>
-                                                    <td>78.00€ for 1 item</td>
-                                                    <td><a href="#" class="btn btn-fill-out btn-sm">View</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>#2366</td>
-                                                    <td>June 20, 2020</td>
-                                                    <td>Completed</td>
-                                                    <td>81.00€ for 1 item</td>
-                                                    <td><a href="#" class="btn btn-fill-out btn-sm">View</a></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                {% if orders %}
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Order</th>
+                                                        <th>Date</th>
+                                                        <th>Status</th>
+                                                        <th>Total</th>
+                                                        <th>Actions</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {% for order in orders %}
+                                                        <tr>
+                                                            <td>#{{ order.id }}</td>
+                                                            <td>{{ order.createdAt|date('d/m/Y') }}</td>
+                                                            <td>Processing</td>
+                                                            <td>{{ order.subTotalHT / 100 }}€ for {{ order.quantity }} item</td>
+                                                            <td><a href="{{ path('account_order_show', {'id': order.id}) }}" class="btn btn-fill-out btn-sm">View</a></td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
+                                {% else %}
+                                    <div>Sorry {{ app.user.fullName }}, You have not yet place order.</div>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
